@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+const DEFAULT_SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://127.0.0.1:17493';
+
 interface ServerStore {
   serverUrl: string;
   setServerUrl: (url: string) => void;
@@ -18,7 +20,7 @@ interface ServerStore {
 export const useServerStore = create<ServerStore>()(
   persist(
     (set) => ({
-      serverUrl: 'http://127.0.0.1:17493',
+      serverUrl: DEFAULT_SERVER_URL,
       setServerUrl: (url) => set({ serverUrl: url }),
 
       isConnected: false,
