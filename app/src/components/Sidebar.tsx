@@ -1,6 +1,7 @@
 import { Link, useMatchRoute, useRouterState } from '@tanstack/react-router';
 import { Box, BookOpen, Loader2, Mic, Server, Speaker, Volume2 } from 'lucide-react';
 import voiceboxLogo from '@/assets/voicebox-logo.png';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { cn } from '@/lib/utils/cn';
 import { useGenerationStore } from '@/stores/generationStore';
 import { usePlayerStore } from '@/stores/playerStore';
@@ -67,6 +68,8 @@ export function Sidebar({ isMacOS }: SidebarProps) {
 
       {/* Spacer to push loader to bottom */}
       <div className="flex-1" />
+
+      <ThemeToggle />
 
       {/* Generation Loader */}
       {isGenerating && (

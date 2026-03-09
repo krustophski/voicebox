@@ -1,5 +1,25 @@
 import { create } from 'zustand';
 
+const THEME_STORAGE_KEY = 'voicebox-theme';
+
+function applyTheme(theme: 'light' | 'dark') {
+  document.documentElement.classList.toggle('dark', theme === 'dark');
+  document.documentElement.style.colorScheme = theme;
+}
+
+function getInitialTheme(): 'light' | 'dark' {
+  if (typeof window === 'undefined') {
+    return 'dark';
+  }
+
+  const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
+  if (storedTheme === 'light' || storedTheme === 'dark') {
+    return storedTheme;
+  }
+
+  return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+}
+
 // Draft state for the create voice profile form
 export interface ProfileFormDraft {
   name: string;
@@ -40,6 +60,12 @@ interface UIStore {
   setTheme: (theme: 'light' | 'dark') => void;
 }
 
+const initialTheme = getInitialTheme();
+
+if (typeof document !== 'undefined') {
+  applyTheme(initialTheme);
+}
+
 export const useUIStore = create<UIStore>((set) => ({
   sidebarOpen: true,
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
@@ -58,9 +84,10 @@ export const useUIStore = create<UIStore>((set) => ({
   profileFormDraft: null,
   setProfileFormDraft: (draft) => set({ profileFormDraft: draft }),
 
-  theme: 'light',
+  theme: initialTheme,
   setTheme: (theme) => {
     set({ theme });
-    document.documentElement.classList.toggle('dark', theme === 'dark');
+    applyTheme(theme);
+    window.localStorage.setItem(THEME_STORAGE_KEY, theme);
   },
 }));
