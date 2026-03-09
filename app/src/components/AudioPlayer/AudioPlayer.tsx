@@ -39,7 +39,7 @@ export function AudioPlayer() {
       if (!profileId) return { channel_ids: [] };
       return apiClient.getProfileChannels(profileId);
     },
-    enabled: !!profileId && platform.metadata.isTauri,
+    enabled: !!profileId,
   });
 
   const { data: channels } = useQuery({
@@ -50,7 +50,7 @@ export function AudioPlayer() {
 
   // Determine if we should use native playback
   const useNativePlayback = useMemo(() => {
-    if (!platform.metadata.isTauri || !profileChannels || !channels) {
+    if (!profileChannels || !channels) {
       return false;
     }
 
@@ -195,7 +195,7 @@ export function AudioPlayer() {
         let runtimeProfileChannels = null;
         let runtimeChannels = null;
 
-        if (platform.metadata.isTauri && currentProfileId) {
+        if (currentProfileId) {
           try {
             runtimeProfileChannels = await apiClient.getProfileChannels(currentProfileId);
             debug.log('Runtime profileChannels:', runtimeProfileChannels);
@@ -210,7 +210,7 @@ export function AudioPlayer() {
         }
 
         debug.log('Auto-play check:', {
-          isTauri: platform.metadata.isTauri,
+          hasPlatformRouting: true,
           currentAudioUrl,
           currentProfileId,
           hasProfileChannels: !!runtimeProfileChannels,
@@ -218,7 +218,6 @@ export function AudioPlayer() {
         });
 
         if (
-          platform.metadata.isTauri &&
           currentAudioUrl &&
           currentProfileId &&
           runtimeProfileChannels &&
@@ -513,7 +512,7 @@ export function AudioPlayer() {
     }
 
     // Stop native playback if it was active
-    if (isUsingNativePlaybackRef.current && platform.metadata.isTauri) {
+    if (isUsingNativePlaybackRef.current) {
       try {
         platform.audio.stopPlayback();
         debug.log('Stopped native audio playback');
@@ -798,7 +797,7 @@ export function AudioPlayer() {
 
   const handleClose = () => {
     // Stop any native playback
-    if (isUsingNativePlaybackRef.current && platform.metadata.isTauri) {
+    if (isUsingNativePlaybackRef.current) {
       try {
         platform.audio.stopPlayback();
       } catch (error) {

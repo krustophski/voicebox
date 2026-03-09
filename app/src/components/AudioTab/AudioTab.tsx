@@ -49,9 +49,6 @@ export function AudioTab() {
   const { data: devices, isLoading: devicesLoading } = useQuery({
     queryKey: ['audio-devices'],
     queryFn: async () => {
-      if (!platform.metadata.isTauri) {
-        return [];
-      }
       try {
         return await platform.audio.listOutputDevices();
       } catch (error) {
@@ -59,7 +56,6 @@ export function AudioTab() {
         return [];
       }
     },
-    enabled: platform.metadata.isTauri,
   });
 
   const { data: profiles } = useQuery({
@@ -343,7 +339,8 @@ export function AudioTab() {
             <div className="flex flex-col items-center justify-center py-12 border-2 border-dashed border-muted rounded-md">
               <CheckCircle2 className="h-12 w-12 text-muted-foreground mb-4" />
               <p className="text-muted-foreground text-center">
-                {platform.metadata.isTauri ? 'No audio devices found' : 'Audio device selection requires Tauri'}
+                No audio devices found. Browser device routing depends on browser support and media
+                permissions.
               </p>
             </div>
           )}
