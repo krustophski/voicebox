@@ -4,6 +4,7 @@ $repoRoot = 'C:\Users\post\vscode\voicebox'
 $webDir = Join-Path $repoRoot 'web'
 $logDir = Join-Path $repoRoot '.run-logs'
 $bunPath = 'C:\Users\post\AppData\Local\Microsoft\WinGet\Packages\Oven-sh.Bun_Microsoft.Winget.Source_8wekyb3d8bbwe\bun-windows-x64\bun.exe'
+$desktopAppExe = 'C:\Users\post\AppData\Local\Voicebox\voicebox.exe'
 $serverExe = 'C:\Users\post\AppData\Local\Voicebox\voicebox-server.exe'
 $dataDir = 'C:\Users\post\AppData\Local\Voicebox'
 $backendPort = 17493
@@ -67,6 +68,16 @@ function Test-BackendHealth {
   }
 }
 
+function Start-DesktopApp {
+  $runningApp = Get-Process -ErrorAction SilentlyContinue | Where-Object {
+    $_.Path -eq $desktopAppExe
+  }
+
+  if (-not $runningApp) {
+    Start-Process -FilePath $desktopAppExe -WorkingDirectory $dataDir
+  }
+}
+
 New-Item -ItemType Directory -Path $logDir -Force | Out-Null
 
 $lanIp = Get-LanIp
@@ -99,9 +110,10 @@ Start-Process `
 
 Wait-HttpReady -Url $webUrlLocal -TimeoutSeconds 45
 
-Start-Process $webUrlLocal
+Start-DesktopApp
 
 Write-Host "Voicebox web is running."
+Write-Host "Desktop app started: $desktopAppExe"
 Write-Host "Local URL: $webUrlLocal"
 Write-Host "LAN URL:   $webUrlLan"
 Write-Host "Backend:   $backendUrl"
