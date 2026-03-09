@@ -59,12 +59,14 @@ export const webAudio: PlatformAudio = {
       return;
     }
 
-    const audioBlob = new Blob([audioData], { type: 'audio/wav' });
+    const normalizedAudioData = new Uint8Array(audioData);
+    const audioBlob = new Blob([normalizedAudioData.buffer], { type: 'audio/wav' });
     const sourceUrl = URL.createObjectURL(audioBlob);
 
     stopAllActivePlayers();
 
-    const supportsSinkSelection = typeof (HTMLAudioElement.prototype as HTMLMediaElementWithSinkId).setSinkId === 'function';
+    const supportsSinkSelection =
+      typeof (HTMLAudioElement.prototype as HTMLMediaElementWithSinkId).setSinkId === 'function';
     if (!supportsSinkSelection) {
       URL.revokeObjectURL(sourceUrl);
       throw new Error('Audio output device selection is not supported by this browser.');

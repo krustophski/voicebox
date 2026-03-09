@@ -1,4 +1,4 @@
-import { Link, useMatchRoute } from '@tanstack/react-router';
+import { Link, useMatchRoute, useRouterState } from '@tanstack/react-router';
 import { Box, BookOpen, Loader2, Mic, Server, Speaker, Volume2 } from 'lucide-react';
 import voiceboxLogo from '@/assets/voicebox-logo.png';
 import { cn } from '@/lib/utils/cn';
@@ -23,6 +23,7 @@ export function Sidebar({ isMacOS }: SidebarProps) {
   const audioUrl = usePlayerStore((state) => state.audioUrl);
   const isPlayerVisible = !!audioUrl;
   const matchRoute = useMatchRoute();
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
 
   return (
     <div
@@ -43,7 +44,7 @@ export function Sidebar({ isMacOS }: SidebarProps) {
           // For index route, use exact match; for others, use default matching
           const isActive =
             tab.path === '/'
-              ? matchRoute({ to: '/', exact: true })
+              ? pathname === '/'
               : matchRoute({ to: tab.path });
 
           return (

@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Check, CheckCircle2, Edit, Plus, Speaker, Trash2 } from 'lucide-react';
+import type { MouseEvent } from 'react';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -120,12 +121,12 @@ export function AudioTab() {
     );
   }
 
-  const handleChannelDelete = async (e, channelId) => {
+  const handleChannelDelete = async (e: MouseEvent<HTMLButtonElement>, channelId: string) => {
     e.stopPropagation();
     if (await confirm('Delete this channel?')) {
       deleteChannel.mutate(channelId);
     }
-  }
+  };
 
   const allChannels = channels || [];
   const allDevices = devices || [];
