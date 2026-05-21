@@ -18,11 +18,14 @@ Last updated: 2026-03-09
 
 ## Current behavior
 
+- Voicebox has been removed from Windows autostart.
 - Desktop shortcut `C:\Users\post\Desktop\Voicebox.lnk` was repointed.
 - Now one click on `Voicebox.lnk` should:
   - launch the normal desktop app
   - start the backend server if needed
   - start the web interface for LAN access
+- There should be no `Voicebox Web LAN.lnk` in the Startup folder.
+- There should be no extra `Voicebox Web LAN.lnk` on the Desktop.
 
 ## LAN access
 
@@ -98,9 +101,10 @@ All-in-one:
 If continuing later, read this file first and verify:
 
 1. `Voicebox.lnk` still points to PowerShell launcher, not directly to `voicebox.exe`
-2. LAN IP has not changed from `192.168.1.111`
-3. Backend health responds on `/health`
-4. Web responds on port `5173`
+2. Startup folder has no Voicebox shortcut
+3. LAN IP has not changed from `192.168.1.111`
+4. Backend health responds on `/health`
+5. Web responds on port `5173`
 
 If LAN IP changes, update:
 
